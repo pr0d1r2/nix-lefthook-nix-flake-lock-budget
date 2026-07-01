@@ -13,6 +13,10 @@
       url = "github:pr0d1r2/nix-dev-shell-agentic";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-lefthook-bats-unit = {
+      url = "github:pr0d1r2/nix-lefthook-bats-unit";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
