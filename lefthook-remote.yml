@@ -1,0 +1,10 @@
+---
+pre-commit:
+  commands:
+    nix-flake-lock-budget:
+      run: timeout ${LEFTHOOK_FLAKE_LOCK_BUDGET_TIMEOUT:-30} lefthook-nix-flake-lock-budget
+
+pre-push:
+  commands:
+    nix-flake-lock-budget:
+      run: timeout ${LEFTHOOK_FLAKE_LOCK_BUDGET_TIMEOUT:-30} lefthook-nix-flake-lock-budget
