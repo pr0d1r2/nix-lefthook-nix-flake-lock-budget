@@ -1,90 +1,29 @@
 ---
-remotes:
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-nixfmt
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-shellcheck
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-shfmt
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-statix
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-deadnix
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-bats-parse
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-bats-unit
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-yamllint
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-typos
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-editorconfig-checker
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-git-conflict-markers
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-git-no-local-paths
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-missing-final-newline
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-nix-no-embedded-shell
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-trailing-whitespace
-    ref: main
-    configs:
-      - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-unicode-lint
-    ref: main
-    configs:
-      - lefthook-remote.yml
 
 pre-commit:
-  parallel: true
   commands:
-    nix-flake-lock-budget:
-      env:
-        FLAKE_LOCK_MAX_NODES: "100"
-        FLAKE_LOCK_MAX_BYTES: "65536"
-      run: timeout ${LEFTHOOK_FLAKE_LOCK_BUDGET_TIMEOUT:-30} lefthook-nix-flake-lock-budget
-    nix-flake-check:
-      glob: "*.nix"
-      run: timeout ${LEFTHOOK_NIX_FLAKE_CHECK_TIMEOUT:-60} nix flake check
+    markdownlint:
+      glob: "*.md"
+      exclude: "^(\\.claude/skills/)"
+      run: timeout ${LEFTHOOK_MARKDOWNLINT_TIMEOUT:-30} lefthook-markdownlint {staged_files}
+    markdownlint-agentic:
+      glob: "*.md"
+      exclude: "^(README|CHANGELOG|SPEC|CONTRIBUTING)\\.md$"
+      run: timeout ${LEFTHOOK_MARKDOWNLINT_AGENTIC_TIMEOUT:-30} lefthook-markdownlint-agentic {staged_files}
+    yamllint:
+      glob: "*.{yml,yaml}"
+      run: timeout ${LEFTHOOK_YAMLLINT_TIMEOUT:-30} lefthook-yamllint {staged_files}
 
 pre-push:
-  parallel: true
   commands:
-    nix-flake-lock-budget:
-      env:
-        FLAKE_LOCK_MAX_NODES: "100"
-        FLAKE_LOCK_MAX_BYTES: "65536"
-      run: timeout ${LEFTHOOK_FLAKE_LOCK_BUDGET_TIMEOUT:-30} lefthook-nix-flake-lock-budget
-    nix-flake-check:
-      glob: "*.nix"
-      run: timeout ${LEFTHOOK_NIX_FLAKE_CHECK_TIMEOUT:-60} nix flake check
+    markdownlint:
+      glob: "*.md"
+      exclude: "^(\\.claude/skills/)"
+      run: timeout ${LEFTHOOK_MARKDOWNLINT_TIMEOUT:-30} lefthook-markdownlint {push_files}
+    markdownlint-agentic:
+      glob: "*.md"
+      exclude: "^(README|CHANGELOG|SPEC|CONTRIBUTING)\\.md$"
+      run: timeout ${LEFTHOOK_MARKDOWNLINT_AGENTIC_TIMEOUT:-30} lefthook-markdownlint-agentic {push_files}
+    yamllint:
+      glob: "*.{yml,yaml}"
+      run: timeout ${LEFTHOOK_YAMLLINT_TIMEOUT:-30} lefthook-yamllint {push_files}
