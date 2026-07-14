@@ -59,4 +59,5 @@ Lefthook-compatible guard that fails when `flake.lock` exceeds a node-count or f
 
 | id | date | cause | fix |
 |----|------|-------|-----|
-| B1 | 2026-07-14 | CI failed (exit 127): `lefthook.yml` ran `lefthook-markdownlint-agentic`, but that binary is not in the ci devShell (`nix-dev-shell-agentic` ships only `lefthook-markdownlint`/`lefthook-yamllint`). README.md also had MD014 dollar-prefix lint violations exposed once the hook ran. | Added `nix-lefthook-markdownlint-agentic` flake input and its package to `ciPackages` so the binary is on PATH; dropped `$ ` command prefixes in README.md code blocks. |
+| B1 | 2026-07-14 | CI failed (exit 127): `lefthook.yml` ran `lefthook-markdownlint-agentic`, but that binary is not in the ci devShell (`nix-dev-shell-agentic` ships only `lefthook-markdownlint`/`lefthook-yamllint`). README.md also had MD014 dollar-prefix lint violations exposed once the hook ran. | Added `nix-lefthook-markdownlint-agentic` flake input and its package to `ciPackages` so the binary is on PATH; dropped `$`-prefix shell prompts from README.md code blocks. |
+| B2 | 2026-07-14 | CI still red after B1: the B1 row embedded a dollar-then-space code span, tripping markdownlint MD038 (no-space-in-code-span) on `SPEC.md`, which the pre-commit/pre-push `markdownlint` hook lints. | Reworded the B1 row to drop the trailing space from that code span. |
