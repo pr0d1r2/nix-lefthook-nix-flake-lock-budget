@@ -35,8 +35,8 @@ self.packages.${system}.default
 
 ## Usage
 
-```console
-$ lefthook-nix-flake-lock-budget [path/to/flake.lock]
+```sh
+lefthook-nix-flake-lock-budget [path/to/flake.lock]
 ```
 
 Defaults to `flake.lock` in the current directory. Exits 0 when no
@@ -61,9 +61,9 @@ Defaults to `flake.lock` in the current directory. Exits 0 when no
 
 ## Development
 
-```console
-$ nix develop       # or: direnv allow
-$ bats tests/unit/  # run tests
+```sh
+nix develop       # or: direnv allow
+bats tests/unit/  # run tests
 ```
 
 ## License

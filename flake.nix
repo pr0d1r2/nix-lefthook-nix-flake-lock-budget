@@ -17,6 +17,10 @@
       url = "github:pr0d1r2/nix-lefthook-bats-unit";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-lefthook-markdownlint-agentic = {
+      url = "github:pr0d1r2/nix-lefthook-markdownlint-agentic";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -24,6 +28,7 @@
       self,
       nixpkgs,
       nix-dev-shell-agentic,
+      nix-lefthook-markdownlint-agentic,
       ...
     }@inputs:
     let
@@ -53,6 +58,7 @@
             inherit pkgs inputs;
             ciPackages = [
               self.packages.${system}.default
+              nix-lefthook-markdownlint-agentic.packages.${system}.default
             ];
             shellHook = builtins.replaceStrings [ "@BATS_LIB_PATH@" ] [ "${shells.batsWithLibs}" ] (
               builtins.readFile ./dev.sh
