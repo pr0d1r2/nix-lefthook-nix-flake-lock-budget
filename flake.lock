@@ -8627,11 +8627,11 @@
         "nixpkgs": "nixpkgs_21"
       },
       "locked": {
-        "lastModified": 1780819359,
-        "narHash": "sha256-yW2lHrCzE10YRjZCjAwbC5aiXfMoT9nyGaP0QP8lvPI=",
+        "lastModified": 1783694594,
+        "narHash": "sha256-vlWnwv1BBiY/SwgBc1iClG4fGHQTozFuFPLV2SGiogA=",
         "owner": "pr0d1r2",
         "repo": "nixpkgs-lock",
-        "rev": "e5e8e199b6108c05a4af6ecca164d6c0c0824ccf",
+        "rev": "e0e9115fba25f29c9bd35f3e2ce98c3a6614f298",
         "type": "github"
       },
       "original": {
