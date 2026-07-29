@@ -10,7 +10,7 @@
     nixpkgs-lock.url = "github:pr0d1r2/nixpkgs-lock";
     nixpkgs.follows = "nixpkgs-lock/nixpkgs";
     nix-dev-shell-agentic = {
-      url = "github:pr0d1r2/nix-dev-shell-agentic";
+      url = "git+https://github.com/pr0d1r2/nix-dev-shell-agentic.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-lefthook-bats-unit = {

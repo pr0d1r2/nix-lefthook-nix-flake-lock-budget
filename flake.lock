@@ -602,15 +602,15 @@
       "locked": {
         "lastModified": 1780952195,
         "narHash": "sha256-S41V+3+tgbZosKEDlcLRTybA1yyOcZ8UdsJDTKvjaKA=",
-        "owner": "pr0d1r2",
-        "repo": "nix-dev-shell-agentic",
+        "ref": "refs/heads/main",
         "rev": "92c3950c421684af5951e717ddf025910be8ef20",
-        "type": "github"
+        "revCount": 21,
+        "type": "git",
+        "url": "https://github.com/pr0d1r2/nix-dev-shell-agentic.git"
       },
       "original": {
-        "owner": "pr0d1r2",
-        "repo": "nix-dev-shell-agentic",
-        "type": "github"
+        "type": "git",
+        "url": "https://github.com/pr0d1r2/nix-dev-shell-agentic.git"
       }
     },
     "nix-dev-shell-agentic-stub": {
