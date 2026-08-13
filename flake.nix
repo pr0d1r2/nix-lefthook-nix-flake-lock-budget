@@ -13,7 +13,7 @@
     set-and-setting.url = "github:pr0d1r2/set-and-setting";
 
     nix-dev-shell-agentic = {
-      url = "git+https://github.com/pr0d1r2/nix-dev-shell-agentic.git";
+      url = "github:pr0d1r2/nix-dev-shell-agentic";
       inputs.nixpkgs.follows = "nixpkgs";
       };
     nix-lefthook-bats-unit = {
