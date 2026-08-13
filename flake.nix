@@ -28,7 +28,7 @@
   };
 
   outputs =
-    {
+    inputs@{
       self,
       nixpkgs,
       set-and-setting,
@@ -38,18 +38,14 @@
       ...
     }:
     let
+      supportedSystems = [
+        "aarch64-darwin"
+        "x86_64-darwin"
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
       forAllSystems =
         f: nixpkgs.lib.genAttrs supportedSystems (system: f nixpkgs.legacyPackages.${system});
-          shells = nix-dev-shell-agentic.lib.mkShells {
-            inherit pkgs inputs;
-            ciPackages = [
-              self.packages.${system}.default
-              nix-lefthook-markdownlint-agentic.packages.${system}.default
-            ];
-            shellHook = builtins.replaceStrings [ "@BATS_LIB_PATH@" ] [ "${shells.batsWithLibs}" ] (
-              builtins.readFile ./dev.sh
-            );
-          };
     in
     set-and-setting.lib.mkConsumerFlake {
       inherit self nixpkgs set-and-setting;
@@ -68,23 +64,6 @@
             runtimeInputs = [ pkgs.jq ];
             text = builtins.readFile ./lefthook-nix-flake-lock-budget.sh;
           };
-        devShells = forAllSystems (
-          pkgs:
-          let
-            inherit (pkgs.stdenv.hostPlatform) system;
-            shells = nix-dev-shell-agentic.lib.mkShells {
-              inherit pkgs inputs;
-              ciPackages = [
-                self.packages.${system}.default
-                nix-lefthook-markdownlint-agentic.packages.${system}.default
-              ];
-              shellHook = builtins.replaceStrings [ "@BATS_LIB_PATH@" ] [ "${shells.batsWithLibs}" ] (
-                builtins.readFile ./dev.sh
-              );
-            };
-          in
-          shells
-        );
       };
       src = ./.;
     };
