@@ -28,30 +28,16 @@
   };
 
   outputs =
-    inputs@{
+    {
       self,
       nixpkgs,
       set-and-setting,
-      nix-dev-shell-agentic,
-      nix-lefthook-bats-unit,
-      nix-lefthook-markdownlint-agentic,
       ...
     }:
-    let
-      supportedSystems = [
-        "aarch64-darwin"
-        "x86_64-darwin"
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-      forAllSystems =
-        f: nixpkgs.lib.genAttrs supportedSystems (system: f nixpkgs.legacyPackages.${system});
-    in
     set-and-setting.lib.mkConsumerFlake {
       inherit self nixpkgs set-and-setting;
       fragments = [
         "base"
-        "actions"
         "nix"
         "shell"
         "ascii"
@@ -59,11 +45,11 @@
         "yaml"
       ];
       extraPackages = pkgs: {
-          default = pkgs.writeShellApplication {
-            name = "lefthook-nix-flake-lock-budget";
-            runtimeInputs = [ pkgs.jq ];
-            text = builtins.readFile ./lefthook-nix-flake-lock-budget.sh;
-          };
+        default = pkgs.writeShellApplication {
+          name = "lefthook-nix-flake-lock-budget";
+          runtimeInputs = [ pkgs.jq ];
+          text = builtins.readFile ./lefthook-nix-flake-lock-budget.sh;
+        };
       };
       src = ./.;
     };
