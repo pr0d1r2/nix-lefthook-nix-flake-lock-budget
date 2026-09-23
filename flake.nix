@@ -10,21 +10,26 @@
     nixpkgs-lock.url = "github:pr0d1r2/nixpkgs-lock";
     nixpkgs.follows = "nixpkgs-lock/nixpkgs";
 
-    set-and-setting.url = "github:pr0d1r2/set-and-setting";
+    set-and-setting = {
+      url = "github:pr0d1r2/set-and-setting";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
+    };
 
     nix-dev-shell-agentic = {
       url = "github:pr0d1r2/nix-dev-shell-agentic";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        nix-cavekit.inputs.nixpkgs-lock.follows = "nixpkgs-lock";
+        nix-cavemem.inputs.nixpkgs-lock.follows = "nixpkgs-lock";
       };
+    };
     nix-lefthook-bats-unit = {
       url = "github:pr0d1r2/nix-lefthook-bats-unit";
       inputs.nixpkgs.follows = "nixpkgs";
-      };
-    nix-lefthook-markdownlint-agentic = {
-      url = "github:pr0d1r2/nix-lefthook-markdownlint-agentic";
-      inputs.nixpkgs.follows = "nixpkgs";
-      };
-    set-and-setting.inputs.nixpkgs-lock.follows = "nixpkgs-lock";
+      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
+    };
   };
 
   outputs =
