@@ -10,6 +10,15 @@
     nixpkgs-lock.url = "github:pr0d1r2/nixpkgs-lock";
     nixpkgs.follows = "nixpkgs-lock/nixpkgs";
 
+    nix-cavekit = {
+      url = "github:pr0d1r2/nix-cavekit";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        set-and-setting.follows = "set-and-setting";
+      };
+    };
+
     set-and-setting = {
       url = "github:pr0d1r2/set-and-setting";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,7 +30,7 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         nixpkgs-lock.follows = "nixpkgs-lock";
-        nix-cavekit.inputs.nixpkgs-lock.follows = "nixpkgs-lock";
+        nix-cavekit.follows = "nix-cavekit";
         nix-cavemem.inputs.nixpkgs-lock.follows = "nixpkgs-lock";
       };
     };
