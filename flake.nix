@@ -1,5 +1,5 @@
 {
-  description = "CHANGEME";
+  description = "Lefthook-compatible flake.lock node-count and file-size budget guard";
 
   nixConfig = {
     extra-substituters = [ "https://pr0d1r2.cachix.org" ];
