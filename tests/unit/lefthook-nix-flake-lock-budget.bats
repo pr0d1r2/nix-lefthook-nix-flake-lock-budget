@@ -7,18 +7,22 @@ setup() {
     TMP="$BATS_TEST_TMPDIR"
 }
 
+budget() {
+    bash "$BATS_TEST_DIRNAME/../../lefthook-nix-flake-lock-budget.sh" "$@"
+}
+
 # -- V1: no flake.lock in cwd, no arg -> exit 0 --
 
 @test "V1: no flake.lock and no arg exits 0" {
     cd "$TMP"
-    run lefthook-nix-flake-lock-budget
+    run budget
     assert_success
 }
 
 # -- V2: explicit path that doesn't exist -> exit 1 --
 
 @test "V2: explicit nonexistent path fails" {
-    run lefthook-nix-flake-lock-budget /nonexistent/flake.lock
+    run budget /nonexistent/flake.lock
     assert_failure
     assert_output --partial "not found"
 }
@@ -46,7 +50,7 @@ setup() {
   "version": 7
 }
 JSON
-    run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    run budget "$TMP/flake.lock"
     assert_success
 }
 
@@ -64,7 +68,7 @@ JSON
   "version": 7
 }
 JSON
-    FLAKE_LOCK_MAX_NODES=2 run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    FLAKE_LOCK_MAX_NODES=2 run budget "$TMP/flake.lock"
     assert_failure
     assert_output --partial "3 nodes (max 2)"
 }
@@ -81,7 +85,7 @@ JSON
   "version": 7
 }
 JSON
-    run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    run budget "$TMP/flake.lock"
     assert_success
 }
 
@@ -97,7 +101,7 @@ JSON
   "version": 7
 }
 JSON
-    FLAKE_LOCK_MAX_BYTES=10 run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    FLAKE_LOCK_MAX_BYTES=10 run budget "$TMP/flake.lock"
     assert_failure
     assert_output --partial "bytes (max 10)"
 }
@@ -116,7 +120,7 @@ JSON
   "version": 7
 }
 JSON
-    FLAKE_LOCK_MAX_NODES=2 FLAKE_LOCK_MAX_BYTES=10 run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    FLAKE_LOCK_MAX_NODES=2 FLAKE_LOCK_MAX_BYTES=10 run budget "$TMP/flake.lock"
     assert_failure
     assert_output --partial "nodes (max 2)"
     refute_output --partial "bytes"
@@ -126,7 +130,7 @@ JSON
 
 @test "V8: invalid JSON fails" {
     echo "not json" > "$TMP/flake.lock"
-    run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    run budget "$TMP/flake.lock"
     assert_failure
     assert_output --partial "invalid JSON"
 }
@@ -137,7 +141,7 @@ JSON
     cat > "$TMP/flake.lock" <<'JSON'
 {"nodes": {"root": {}}, "root": "root", "version": 7}
 JSON
-    FLAKE_LOCK_MAX_NODES=abc run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    FLAKE_LOCK_MAX_NODES=abc run budget "$TMP/flake.lock"
     assert_failure
     assert_output --partial "positive integer"
 }
@@ -146,7 +150,7 @@ JSON
     cat > "$TMP/flake.lock" <<'JSON'
 {"nodes": {"root": {}}, "root": "root", "version": 7}
 JSON
-    FLAKE_LOCK_MAX_BYTES=xyz run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    FLAKE_LOCK_MAX_BYTES=xyz run budget "$TMP/flake.lock"
     assert_failure
     assert_output --partial "positive integer"
 }
@@ -155,7 +159,7 @@ JSON
     cat > "$TMP/flake.lock" <<'JSON'
 {"nodes": {"root": {}}, "root": "root", "version": 7}
 JSON
-    FLAKE_LOCK_MAX_NODES=0 run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    FLAKE_LOCK_MAX_NODES=0 run budget "$TMP/flake.lock"
     assert_failure
     assert_output --partial "positive integer"
 }
@@ -164,7 +168,7 @@ JSON
     cat > "$TMP/flake.lock" <<'JSON'
 {"nodes": {"root": {}}, "root": "root", "version": 7}
 JSON
-    FLAKE_LOCK_MAX_BYTES=-1 run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    FLAKE_LOCK_MAX_BYTES=-1 run budget "$TMP/flake.lock"
     assert_failure
     assert_output --partial "positive integer"
 }
@@ -185,7 +189,7 @@ JSON
   "version": 7
 }
 JSON
-    FLAKE_LOCK_MAX_NODES=2 run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    FLAKE_LOCK_MAX_NODES=2 run budget "$TMP/flake.lock"
     assert_failure
     assert_output --partial "big:"
 }
@@ -197,7 +201,7 @@ JSON
     cat > "$TMP/flake.lock" <<'JSON'
 {"nodes": {"root": {}}, "root": "root", "version": 7}
 JSON
-    run lefthook-nix-flake-lock-budget
+    run budget
     assert_success
 }
 
@@ -207,7 +211,7 @@ JSON
     cat > "$TMP/flake.lock" <<'JSON'
 {"nodes": {"root": {}}, "root": "root", "version": 7}
 JSON
-    FLAKE_LOCK_MAX_NODES=abc run lefthook-nix-flake-lock-budget "$TMP/flake.lock"
+    FLAKE_LOCK_MAX_NODES=abc run budget "$TMP/flake.lock"
     assert_failure
     assert_output --partial "hint:"
 }
