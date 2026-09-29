@@ -57,23 +57,43 @@
       set-and-setting,
       ...
     }:
-    set-and-setting.lib.mkConsumerFlake {
-      inherit self nixpkgs set-and-setting;
-      fragments = [
-        "base"
-        "nix"
-        "shell"
-        "ascii"
-        "markdown"
-        "yaml"
-      ];
-      extraPackages = pkgs: {
-        default = pkgs.writeShellApplication {
-          name = "lefthook-nix-flake-lock-budget";
-          runtimeInputs = [ pkgs.jq ];
-          text = builtins.readFile ./lefthook-nix-flake-lock-budget.sh;
-        };
-      };
-      src = ./.;
-    };
+    (
+      consumer:
+      consumer
+      // {
+        # mkConsumerFlake exports consumer packages, but does not put them in
+        # its dev shells. The guardrails Bats suite invokes this package by
+        # name, so make it available in every shell used by CI and developers.
+        devShells = builtins.mapAttrs (
+          system: shells:
+          builtins.mapAttrs (
+            _name: shell:
+            shell.overrideAttrs (old: {
+              nativeBuildInputs = [ self.packages.${system}.default ] ++ (old.nativeBuildInputs or [ ]);
+            })
+          ) shells
+        ) consumer.devShells;
+      }
+    )
+      (
+        set-and-setting.lib.mkConsumerFlake {
+          inherit self nixpkgs set-and-setting;
+          fragments = [
+            "base"
+            "nix"
+            "shell"
+            "ascii"
+            "markdown"
+            "yaml"
+          ];
+          extraPackages = pkgs: {
+            default = pkgs.writeShellApplication {
+              name = "lefthook-nix-flake-lock-budget";
+              runtimeInputs = [ pkgs.jq ];
+              text = builtins.readFile ./lefthook-nix-flake-lock-budget.sh;
+            };
+          };
+          src = ./.;
+        }
+      );
 }

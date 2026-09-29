@@ -4,6 +4,6 @@ extensions:
   lock: 4194304
   nix: 10240
   bats: 16384
-  md: 8192
+  md: 10240
   sh: 4096
   yml: 4096
