@@ -1,5 +1,5 @@
 {
-  description = "Lefthook guard: fail when flake.lock exceeds node-count or file-size budget";
+  description = "CHANGEME";
 
   nixConfig = {
     extra-substituters = [ "https://pr0d1r2.cachix.org" ];
@@ -9,17 +9,44 @@
   inputs = {
     nixpkgs-lock.url = "github:pr0d1r2/nixpkgs-lock";
     nixpkgs.follows = "nixpkgs-lock/nixpkgs";
-    nix-dev-shell-agentic = {
-      url = "git+https://github.com/pr0d1r2/nix-dev-shell-agentic.git";
+
+    nix-cavekit = {
+      url = "github:pr0d1r2/nix-cavekit";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        set-and-setting.follows = "set-and-setting";
+      };
+    };
+
+    nix-cavemem = {
+      url = "github:pr0d1r2/nix-cavemem";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        set-and-setting.follows = "set-and-setting";
+      };
+    };
+
+    set-and-setting = {
+      url = "github:pr0d1r2/set-and-setting";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
+    };
+
+    nix-dev-shell-agentic = {
+      url = "github:pr0d1r2/nix-dev-shell-agentic";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        nix-cavekit.follows = "nix-cavekit";
+        nix-cavemem.follows = "nix-cavemem";
+      };
     };
     nix-lefthook-bats-unit = {
       url = "github:pr0d1r2/nix-lefthook-bats-unit";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-lefthook-markdownlint-agentic = {
-      url = "github:pr0d1r2/nix-lefthook-markdownlint-agentic";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
     };
   };
 
@@ -27,45 +54,46 @@
     {
       self,
       nixpkgs,
-      nix-dev-shell-agentic,
-      nix-lefthook-markdownlint-agentic,
+      set-and-setting,
       ...
-    }@inputs:
-    let
-      supportedSystems = [
-        "aarch64-darwin"
-        "x86_64-darwin"
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-      forAllSystems =
-        f: nixpkgs.lib.genAttrs supportedSystems (system: f nixpkgs.legacyPackages.${system});
-    in
-    {
-      packages = forAllSystems (pkgs: {
-        default = pkgs.writeShellApplication {
-          name = "lefthook-nix-flake-lock-budget";
-          runtimeInputs = [ pkgs.jq ];
-          text = builtins.readFile ./lefthook-nix-flake-lock-budget.sh;
-        };
-      });
-
-      devShells = forAllSystems (
-        pkgs:
-        let
-          inherit (pkgs.stdenv.hostPlatform) system;
-          shells = nix-dev-shell-agentic.lib.mkShells {
-            inherit pkgs inputs;
-            ciPackages = [
-              self.packages.${system}.default
-              nix-lefthook-markdownlint-agentic.packages.${system}.default
-            ];
-            shellHook = builtins.replaceStrings [ "@BATS_LIB_PATH@" ] [ "${shells.batsWithLibs}" ] (
-              builtins.readFile ./dev.sh
-            );
+    }:
+    (
+      consumer:
+      consumer
+      // {
+        # mkConsumerFlake exports consumer packages, but does not put them in
+        # its dev shells. The guardrails Bats suite invokes this package by
+        # name, so make it available in every shell used by CI and developers.
+        devShells = builtins.mapAttrs (
+          system: shells:
+          builtins.mapAttrs (
+            _name: shell:
+            shell.overrideAttrs (old: {
+              nativeBuildInputs = [ self.packages.${system}.default ] ++ (old.nativeBuildInputs or [ ]);
+            })
+          ) shells
+        ) consumer.devShells;
+      }
+    )
+      (
+        set-and-setting.lib.mkConsumerFlake {
+          inherit self nixpkgs set-and-setting;
+          fragments = [
+            "base"
+            "nix"
+            "shell"
+            "ascii"
+            "markdown"
+            "yaml"
+          ];
+          extraPackages = pkgs: {
+            default = pkgs.writeShellApplication {
+              name = "lefthook-nix-flake-lock-budget";
+              runtimeInputs = [ pkgs.jq ];
+              text = builtins.readFile ./lefthook-nix-flake-lock-budget.sh;
+            };
           };
-        in
-        shells
+          src = ./.;
+        }
       );
-    };
 }
