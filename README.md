@@ -1,5 +1,11 @@
 # nix-lefthook-nix-flake-lock-budget
 
+<!-- hallucinogen:autonomy-disclaimer start -->
+> Read [LLM-DISCLAIMER](docs/LLM-DISCLAIMER.md) first. This repository is
+> tended by an autonomous loop, and that file says what the loop may do here,
+> what it may not, and what to check before trusting anything in this tree.
+<!-- hallucinogen:autonomy-disclaimer end -->
+
 Lefthook-compatible guard that fails when `flake.lock` exceeds a node-count
 or file-size budget. Catches accidental full-flake imports that explode the
 lock graph.
