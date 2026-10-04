@@ -39,11 +39,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791026291,
-        "narHash": "sha256-u8DDFbSS7ndwqi28AkJGDDJoeZZE0DWTZoqyUJDb2/o=",
+        "lastModified": 1791118161,
+        "narHash": "sha256-qiO/ksGK12n2FjIUpcosTr0iE/ojpxt8vgvpNnL2oSo=",
         "owner": "pr0d1r2",
         "repo": "nix-cavemem",
-        "rev": "06f021260f3fe764d1667ae196a949b8bf5c54b4",
+        "rev": "da6eb2ac12bc75a03537ed6e18a72558eff04bd1",
         "type": "github"
       },
       "original": {
@@ -1766,11 +1766,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790957371,
-        "narHash": "sha256-iL/YEzut0I+3i1fNnKSsZi8pJMGftE0hS2Mq1JEIUn4=",
+        "lastModified": 1791122408,
+        "narHash": "sha256-VexGN+0tUSX7lpwP/JL6MdSGYZUzzZrYuiZbcrDtISg=",
         "owner": "pr0d1r2",
         "repo": "set-and-setting",
-        "rev": "c54b884879d64492523421472069bf7709c912d3",
+        "rev": "552cc568495ba7f328ef448026dc09b921c25a9a",
         "type": "github"
       },
       "original": {
